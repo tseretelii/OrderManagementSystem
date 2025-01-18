@@ -1,4 +1,5 @@
-﻿using OrderManagementSystem.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using OrderManagementSystem.Data;
 using OrderManagementSystem.Data.DTOS.Order;
 using OrderManagementSystem.Data.Models;
 
@@ -41,5 +42,18 @@ namespace OrderManagementSystem.Services
             }
             return true;
         }
+        public async Task<List<Order>> GetAllOrders()
+        {
+            var orders = new List<Order>();
+            try
+            {
+                orders = await _context.Orders.Include(x => x.Person).Include(x => x.Products).ToListAsync();
+                return orders;
+            }
+            catch (Exception)
+            {
+                return orders;
+            }
+        } 
     }
 }
