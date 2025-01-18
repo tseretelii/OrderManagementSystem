@@ -1,4 +1,8 @@
 
+using Microsoft.EntityFrameworkCore;
+using OrderManagementSystem.Data;
+using OrderManagementSystem.Services;
+
 namespace OrderManagementSystem
 {
     public class Program
@@ -10,6 +14,15 @@ namespace OrderManagementSystem
             // Add services to the container.
 
             builder.Services.AddControllers();
+
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+            builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
+
+            // Register the UserService
+            builder.Services.AddScoped<UserService>();
+            builder.Services.AddScoped<ProductService>();
+            builder.Services.AddScoped<OrderService>();
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
