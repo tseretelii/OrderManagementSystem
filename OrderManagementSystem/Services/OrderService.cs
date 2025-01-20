@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OrderManagementSystem.Data;
+using OrderManagementSystem.Data.DTOS;
 using OrderManagementSystem.Data.DTOS.Order;
 using OrderManagementSystem.Data.Models;
 
@@ -18,9 +19,9 @@ namespace OrderManagementSystem.Services
         {
             try
             {
-                var person = _context.Users.FirstOrDefault(u => u.Id == orderDTO.PersonId);
+                var person = await _context.Users.FirstOrDefaultAsync(u => u.Id == orderDTO.PersonId);
 
-                var products = _context.Products.Where(x => orderDTO.ProductIds.Contains(x.Id)).ToList();
+                var products = await _context.Products.Where(x => orderDTO.ProductIds.Contains(x.Id)).ToListAsync();
 
                 if (person == null)
                     return false;
@@ -42,6 +43,46 @@ namespace OrderManagementSystem.Services
             }
             return true;
         }
+        //public async Task<List<Order>> GetOrder(OrderGetDTO orderGetDTO) // If user inputs userId - they will get back all orders associated with the user
+        //{                                                                // If user inputs OrderId - they will get back a list containing 1 order associated with the given id
+        //    if (orderGetDTO.OrderId is null && orderGetDTO.UserId is null)
+        //        return default;
+
+        //    if (orderGetDTO.OrderId != null)
+        //    {
+        //        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == orderGetDTO.UserId);
+
+        //        return await _context.Orders.Include(x => x.Products).Where(x => x.Person == user).ToListAsync();
+        //    }
+        //    else if (orderGetDTO.UserId != null)
+        //    {
+        //        return await _context.Orders.Include(x => x.Products).Where(x => x.Person.Id == orderGetDTO.UserId).ToListAsync();
+        //    }
+
+        //    return default;
+        //}
+
+        public async Task<Order> GetOrder(int id)
+        {
+            return await _context.Orders.Include(x => x.Products).FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<bool> DeleteOrder(int id)
+        {
+            try
+            {
+                var order = await _context.Orders.FirstOrDefaultAsync(x => x.Id == id);
+
+                _context.Orders.Remove(order);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return true;
+        }
+
         public async Task<List<Order>> GetAllOrders()
         {
             var orders = new List<Order>();
