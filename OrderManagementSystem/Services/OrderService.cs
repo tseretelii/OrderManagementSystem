@@ -43,24 +43,6 @@ namespace OrderManagementSystem.Services
             }
             return true;
         }
-        //public async Task<List<Order>> GetOrder(OrderGetDTO orderGetDTO) // If user inputs userId - they will get back all orders associated with the user
-        //{                                                                // If user inputs OrderId - they will get back a list containing 1 order associated with the given id
-        //    if (orderGetDTO.OrderId is null && orderGetDTO.UserId is null)
-        //        return default;
-
-        //    if (orderGetDTO.OrderId != null)
-        //    {
-        //        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == orderGetDTO.UserId);
-
-        //        return await _context.Orders.Include(x => x.Products).Where(x => x.Person == user).ToListAsync();
-        //    }
-        //    else if (orderGetDTO.UserId != null)
-        //    {
-        //        return await _context.Orders.Include(x => x.Products).Where(x => x.Person.Id == orderGetDTO.UserId).ToListAsync();
-        //    }
-
-        //    return default;
-        //}
 
         public async Task<Order> GetOrder(int id)
         {
@@ -97,16 +79,29 @@ namespace OrderManagementSystem.Services
             }
         }
         
-        public async Task<List<decimal>> GetAllOrdersAmount(int userId)
+        public async Task<decimal> GetAllOrdersAmount(int userId) // Sums the prices of the user's purchased products.
         {
+            // First Way
             var orders = await _context.Orders
                 .Include(o => o.Person)
                 .Include(o => o.Products)
                 .ToListAsync();
 
-            var result = orders.Select(x => x.Products.Sum(p => p.Price)).ToList();
+            var userResult = orders.Where(x => x.Person.Id == userId);
 
-            return result;
+            var result = userResult.Select(x => x.Products.Sum(x => x.Price)).ToList()[0];
+
+
+            // Second Way
+            var totalAmount = await
+                (from order in _context.Orders
+                    where order.Person.Id == userId
+                    from product in order.Products
+                    select product.Price)
+                .SumAsync();
+
+            return totalAmount;
         }
+
     }
 }

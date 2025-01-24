@@ -30,20 +30,14 @@ namespace OrderManagementSystem.Controllers
             return await _orderService.GetAllOrders();
         }
 
-        //[HttpPost("GetOrder")]
-        //public async Task<List<Order>> GetOrder(OrderGetDTO request)
-        //{
-        //    return await _orderService.GetOrder(request);
-        //}
+        [HttpGet("{id}")]
+        public async Task<Order> GetOrder(int id)
+        {
+            return await _orderService.GetOrder(id);
+        }
 
-        //[HttpGet("{id}")]
-        //public async Task<Order> GetOrder(int id)
-        //{
-        //    return await _orderService.GetOrder(id);
-        //}
-
-        [HttpGet("{personId}")]
-        public async Task<List<decimal>> GetAllOrdersAmount(int personId)
+        [HttpGet("get-order-sum/{personId}")]
+        public async Task<decimal> GetAllOrdersAmount(int personId)
         {
             return await _orderService.GetAllOrdersAmount(personId);
         }
