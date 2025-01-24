@@ -95,6 +95,18 @@ namespace OrderManagementSystem.Services
             {
                 return orders;
             }
-        } 
+        }
+        
+        public async Task<List<decimal>> GetAllOrdersAmount(int userId)
+        {
+            var orders = await _context.Orders
+                .Include(o => o.Person)
+                .Include(o => o.Products)
+                .ToListAsync();
+
+            var result = orders.Select(x => x.Products.Sum(p => p.Price)).ToList();
+
+            return result;
+        }
     }
 }

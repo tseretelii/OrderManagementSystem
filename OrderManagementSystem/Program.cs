@@ -17,8 +17,8 @@ namespace OrderManagementSystem
                 .AddJsonOptions(options =>
                 {
                     // Configure JSON serialization to handle cycles
-                    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
                     options.JsonSerializerOptions.WriteIndented = true; // Optional: for easier debugging
+                    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
                 });
 
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
