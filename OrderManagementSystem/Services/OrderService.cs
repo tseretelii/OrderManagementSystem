@@ -3,10 +3,11 @@ using OrderManagementSystem.Data;
 using OrderManagementSystem.Data.DTOS;
 using OrderManagementSystem.Data.DTOS.Order;
 using OrderManagementSystem.Data.Models;
+using OrderManagementSystem.Interfaces;
 
 namespace OrderManagementSystem.Services
 {
-    public class OrderService
+    public class OrderService : IOrderService
     {
         private readonly ApplicationDbContext _context;
 

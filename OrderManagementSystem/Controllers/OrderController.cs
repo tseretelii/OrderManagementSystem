@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using OrderManagementSystem.Data.DTOS;
 using OrderManagementSystem.Data.DTOS.Order;
 using OrderManagementSystem.Data.Models;
+using OrderManagementSystem.Interfaces;
 using OrderManagementSystem.Services;
 
 namespace OrderManagementSystem.Controllers
@@ -11,9 +12,9 @@ namespace OrderManagementSystem.Controllers
     [ApiController]
     public class OrderController : ControllerBase
     {
-        private readonly OrderService _orderService;
+        private readonly IOrderService _orderService;
 
-        public OrderController(OrderService service)
+        public OrderController(IOrderService service)
         {
             _orderService = service;
         }

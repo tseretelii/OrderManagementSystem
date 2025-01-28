@@ -1,6 +1,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using OrderManagementSystem.Data;
+using OrderManagementSystem.Interfaces;
 using OrderManagementSystem.Services;
 using System.Text.Json.Serialization;
 
@@ -27,7 +28,8 @@ namespace OrderManagementSystem
             // Register the UserService
             builder.Services.AddScoped<UserService>();
             builder.Services.AddScoped<ProductService>();
-            builder.Services.AddScoped<OrderService>();
+            builder.Services.AddScoped<IOrderService,OrderService>();
+            builder.Services.AddScoped<StringUtilsService>();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
